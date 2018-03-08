@@ -95,11 +95,21 @@ def do_request(block, buf):
         except ValueError:
             pass
 
+    if isinstance(data, str) != True :
+      data = '\n'.join(data)
+
     display = (
         response_body.split('\n') +
+        ['', '//Response'] +
         ['', '// status code: %s' % response.status_code] +
-        ['// %s: %s' % (k, v) for k, v in response.headers.items()]
+        ['// %s: %s' % (k, v) for k, v in response.headers.items()] +
+        ['', '//Request'] +
+        ['', '// %s, %s' %(method, url)] +
+        ['// %s: %s' % (k, v) for k, v in headers.items()]
     )
+
+    if data:
+        display += ['// %s' % v for v in data.split('\n')]
 
     return display, content_type
 
